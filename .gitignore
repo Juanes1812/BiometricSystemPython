@@ -1,0 +1,28 @@
+# Ignora el entorno virtual
+venv/
+
+# Ignora archivos de sistema
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignora archivos temporales
+*.log
+*.tmp
+*.swp
+
+# Ignora archivos de configuración de IDEs
+.vscode/
+.idea/
+
+# Ignora archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar carpetas específicas dentro de assets
+assets/rostros/
+assets/voces/
+
+# Ignorar el archivo de audio temporal
+voz_actual.wav
