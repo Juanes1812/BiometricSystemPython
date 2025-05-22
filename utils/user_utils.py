@@ -26,9 +26,10 @@ def obtener_contrasena(nombre_usuario):
         return None
     with open(ARCHIVO_USUARIOS, "r") as f:
         for linea in f:
-            user, pwd = linea.strip().split(",", 1)
-            if user == nombre_usuario:
-                return pwd
+            datos = linea.strip().split(",")
+            if datos[0] == nombre_usuario:
+                if len(datos) > 1:
+                    return datos[1] 
     return None
 
 def registrar_usuario(root):
@@ -70,7 +71,8 @@ def iniciar_sesion(nombre_usuario, contrasena):
     if contrasena_guardada is None:
         messagebox.showerror("Error", "❌ No se pudo obtener la contraseña del usuario.")
         return False
-
+    print(f"Contraseña guardada: {contrasena_guardada}")
+    print(f"Contraseña ingresada: {contrasena}")
     if contrasena == contrasena_guardada:
         messagebox.showinfo("Inicio de sesión", f"✅ Bienvenido, {nombre_usuario}!")
         return True
@@ -78,7 +80,6 @@ def iniciar_sesion(nombre_usuario, contrasena):
         messagebox.showerror("Error", "❌ Contraseña incorrecta.")
         return False
 
-# Método para recuperar la contraseña usando biometría
 def recuperar_por_biometria():
     nombre_usuario = reconocer_rostro()
     if nombre_usuario:
@@ -87,12 +88,16 @@ def recuperar_por_biometria():
             messagebox.showinfo("Recuperación", f"✅ Voz verificada: {nombre_usuario}!")
             if verificar_usuario_por_correo(nombre_usuario):
                 messagebox.showinfo("Recuperación", f"✅ Verificación por correo completada. Bienvenido, {nombre_usuario}!")
+                return True, nombre_usuario
             else:
                 messagebox.showerror("Error", "❌ No se pudo verificar el correo.")
+                return False
         else:
             messagebox.showerror("Error", "❌ Voz no reconocida.")
+            return False
     else:
         messagebox.showerror("Error", "❌ Rostro no reconocido.")
+        return False
 
 
 
@@ -101,7 +106,8 @@ def recuperar_por_biometria():
 
 
 def centrar_ventana(ventana, ancho=300, alto=200):
-    ventana.update_idletasks()  # Asegura que se obtengan dimensiones correctas
+    #Asegura obtener el tamaño correcto de la ventana
+    ventana.update_idletasks()  
 
     # Obtiene el tamaño de la pantalla
     ancho_pantalla = ventana.winfo_screenwidth()
