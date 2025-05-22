@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox
-import os
+from tkinter import  messagebox
 from utils.user_utils import (registrar_usuario, iniciar_sesion, recuperar_por_biometria, centrar_ventana)
+from utils.mail_utils import (verificar_usuario_por_correo)
 
 class App:
     def __init__(self, root):
@@ -9,17 +9,13 @@ class App:
         self.root.title("🔐 Sistema Biométrico")
         self.root.geometry("400x300")
 
-        # Título
         tk.Label(root, text="Sistema Biométrico", font=("Arial", 18, "bold")).pack(pady=20)
 
-        # Botón: Iniciar sesión
-        tk.Button(root, text="Iniciar sesión", width=20, height=2, bg="#4CAF50", fg="white", command=self.ventana_login).pack(pady=10)
+        tk.Button(root, text="Iniciar sesión", width=20, height=2, bg="#9F6BA0", fg="white", command=self.ventana_login).pack(pady=10)
 
-        # Botón: Registrar nuevo usuario
-        tk.Button(root, text="Registrar usuario", width=20, height=2, bg="#2196F3", fg="white", command=self.registrar_usuario).pack(pady=10)
+        tk.Button(root, text="Registrar usuario", width=20, height=2, bg="#C880B7", fg="white", command=self.registrar_usuario).pack(pady=10)
 
-        # Botón: Salir
-        tk.Button(root, text="Salir", width=20, height=2, bg="#f44336", fg="white", command=self.root.quit).pack(pady=10)
+        tk.Button(root, text="Salir", width=20, height=2, bg="#4A2040", fg="white", command=self.root.quit).pack(pady=10)
 
 
     def ventana_login(self):
@@ -40,10 +36,16 @@ class App:
             usuario = entry_usuario.get().strip()
             contrasena = entry_contrasena.get().strip()
             if usuario and contrasena:
-                # Aquí podrías verificar usuario/contraseña con una base de datos o archivo
+                
                 messagebox.showinfo("Login", f"Intentando iniciar sesión con {usuario}.")
                 login_window.destroy()
-                iniciar_sesion(usuario, contrasena)
+                if iniciar_sesion(usuario, contrasena):
+                    messagebox.showinfo("Bienvenido", f"Inicio de sesión exitoso para {usuario}")
+                    login_window.destroy()
+                    self.mostrar_pagina_principal(usuario)
+                else:
+                    messagebox.showerror("Error", "Usuario o contraseña incorrectos.")
+
             else:
                 messagebox.showwarning("Campos vacíos", "Debes ingresar usuario y contraseña.")
 
@@ -51,11 +53,26 @@ class App:
             login_window.destroy()
             recuperar_por_biometria()
 
-        tk.Button(login_window, text="Iniciar sesión", command=verificar_login, bg="#4CAF50", fg="white").pack(pady=10)
-        tk.Button(login_window, text="Olvidé mi contraseña", command=olvide_contrasena, fg="blue").pack()
+        tk.Button(login_window, text="Iniciar sesión", command=verificar_login, bg="#9F6BA0", fg="white").pack(pady=10)
+        tk.Button(login_window, text="Olvidé mi contraseña", command=olvide_contrasena, fg="purple").pack()
 
     def registrar_usuario(self):
         registrar_usuario(self.root)
+
+    def verificar_por_correo(self):
+        verificar_usuario_por_correo(self.root)
+
+    def mostrar_pagina_principal(self, nombre_usuario):
+        ventana_principal = tk.Toplevel(self.root)
+        ventana_principal.title("Bienvenido")
+        ventana_principal.geometry("400x300")
+        centrar_ventana(ventana_principal, 400, 300)
+
+        tk.Label(ventana_principal, text=f"¡Bienvenido, {nombre_usuario}!", font=("Arial", 16)).pack(pady=30)
+
+        tk.Button(ventana_principal, text="Cerrar sesión", bg="#4A2040", fg="white", command=ventana_principal.destroy).pack(pady=20)
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
