@@ -26,3 +26,6 @@ assets/voces/
 
 # Ignorar el archivo de audio temporal
 voz_actual.wav
+
+# Ignorar .env
+.env
