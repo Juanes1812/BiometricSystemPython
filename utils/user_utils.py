@@ -4,75 +4,75 @@ import cv2
 import os
 from utils.speech_utils import (registrar_voz, reconocer_voz)
 from utils.face_utils import (registrar_foto, reconocer_rostro)
+from utils.mail_utils import (verificar_usuario_por_correo)
 
+ARCHIVO_USUARIOS = os.path.join("data", "usuarios.txt")
 
-
-    # Archivo donde guardaremos los usuarios
-    
-    
-def guardar_usuario(nombre, contrasena):
-    ARCHIVO_USUARIOS = os.path.join("data", "usuarios.txt")
+def guardar_usuario(nombre_usuario, contrasena, correo):
     with open(ARCHIVO_USUARIOS, "a") as f:
-        f.write(f"{nombre},{contrasena}\n")
+        f.write(f"{nombre_usuario},{contrasena},{correo}\n")
 
-def usuario_existe(nombre):
-    ARCHIVO_USUARIOS = os.path.join("data", "usuarios.txt")
+def usuario_existe(nombre_usuario):
     if not os.path.exists(ARCHIVO_USUARIOS):
         return False
     with open(ARCHIVO_USUARIOS, "r") as f:
         for linea in f:
-            if linea.strip().split(",")[0] == nombre:
+            if linea.strip().split(",")[0] == nombre_usuario:
                 return True
     return False
 
-def obtener_contrasena(nombre):
-    ARCHIVO_USUARIOS = os.path.join("data", "usuarios.txt")
+def obtener_contrasena(nombre_usuario):
     if not os.path.exists(ARCHIVO_USUARIOS):
         return None
     with open(ARCHIVO_USUARIOS, "r") as f:
         for linea in f:
             user, pwd = linea.strip().split(",", 1)
-            if user == nombre:
+            if user == nombre_usuario:
                 return pwd
     return None
 
 def registrar_usuario(root):
-    nombre = simpledialog.askstring("Registrar usuario", "Ingresa el nombre del nuevo usuario:")
-    if not nombre:
-        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un nombre válido.")
+    nombre_usuario = simpledialog.askstring("Registrar usuario", "Ingresa el nombre del nuevo usuario:")
+    if not nombre_usuario:
+        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un usuario válido.")
         return
 
-    if usuario_existe(nombre):
+    if usuario_existe(nombre_usuario):
         messagebox.showerror("Registro fallido", "❌ El usuario ya existe.")
         return
-    # Aquí puedes agregar lógica adicional antes de registrar al usuario
-    contrasena = simpledialog.askstring("Contraseña", f"Ingrese una contraseña para {nombre}:", show="*")
+ 
+    contrasena = simpledialog.askstring("Contraseña", f"Ingrese una contraseña para {nombre_usuario}:", show="*")
     if not contrasena:
         messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar una contraseña.")
         return
     
-    registrar_foto(nombre)
-    registrar_voz(nombre, root=root)
-    guardar_usuario(nombre, contrasena)
+    correo = simpledialog.askstring("Correo", f"Ingrese el correo electrónico para {nombre_usuario}:")
+    if not correo:  
+        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un correo electrónico.")
+        return
+    
+    registrar_foto(nombre_usuario)
+    registrar_voz(nombre_usuario, root=root)
+    guardar_usuario(nombre_usuario, contrasena, correo)
     print("🎉 Registro completo.")
-    messagebox.showinfo("Registro", f"🎉 Usuario {nombre} registrado con éxito.")
+    messagebox.showinfo("Registro", f"🎉 Usuario {nombre_usuario} registrado con éxito.")
 
-def iniciar_sesion(nombre, contrasena):
-    if not nombre or not contrasena:
+def iniciar_sesion(nombre_usuario, contrasena):
+    if not nombre_usuario or not contrasena:
         messagebox.showwarning("Inicio cancelado", "⚠️ Debes ingresar usuario y contraseña.")
         return False
 
-    if not usuario_existe(nombre):
+    if not usuario_existe(nombre_usuario):
         messagebox.showerror("Error", "❌ El usuario no existe.")
         return False
 
-    contrasena_guardada = obtener_contrasena(nombre)
+    contrasena_guardada = obtener_contrasena(nombre_usuario)
     if contrasena_guardada is None:
         messagebox.showerror("Error", "❌ No se pudo obtener la contraseña del usuario.")
         return False
 
     if contrasena == contrasena_guardada:
-        messagebox.showinfo("Inicio de sesión", f"✅ Bienvenido, {nombre}!")
+        messagebox.showinfo("Inicio de sesión", f"✅ Bienvenido, {nombre_usuario}!")
         return True
     else:
         messagebox.showerror("Error", "❌ Contraseña incorrecta.")
@@ -80,17 +80,25 @@ def iniciar_sesion(nombre, contrasena):
 
 # Método para recuperar la contraseña usando biometría
 def recuperar_por_biometria():
-    nombre = reconocer_rostro()
-    if nombre:
-        messagebox.showinfo("Reconocimiento Facial", f"Rostro reconocido: {nombre}")
-        if reconocer_voz(nombre):
-            messagebox.showinfo("Recuperación", f"✅ Identidad verificada. Bienvenido, {nombre}!")
+    nombre_usuario = reconocer_rostro()
+    if nombre_usuario:
+        messagebox.showinfo("Reconocimiento Facial", f"Rostro reconocido: {nombre_usuario}")
+        if reconocer_voz(nombre_usuario):
+            messagebox.showinfo("Recuperación", f"✅ Voz verificada: {nombre_usuario}!")
+            if verificar_usuario_por_correo(nombre_usuario):
+                messagebox.showinfo("Recuperación", f"✅ Verificación por correo completada. Bienvenido, {nombre_usuario}!")
+            else:
+                messagebox.showerror("Error", "❌ No se pudo verificar el correo.")
         else:
             messagebox.showerror("Error", "❌ Voz no reconocida.")
     else:
         messagebox.showerror("Error", "❌ Rostro no reconocido.")
 
+
+
 #============ FUNCIONES AUXILIARES ============
+
+
 
 def centrar_ventana(ventana, ancho=300, alto=200):
     ventana.update_idletasks()  # Asegura que se obtengan dimensiones correctas
