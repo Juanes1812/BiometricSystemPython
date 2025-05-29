@@ -38,7 +38,6 @@ class App:
                 messagebox.showinfo("Login", f"Intentando iniciar sesión con {usuario}.")
                 login_window.destroy()
                 if iniciar_sesion(usuario, contrasena):
-                    messagebox.showinfo("Bienvenido", f"Inicio de sesión exitoso para {usuario}")
                     login_window.destroy()
                     self.mostrar_pagina_principal(usuario)
                 else:

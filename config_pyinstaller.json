@@ -1,0 +1,69 @@
+{
+    "script": "App.py",
+    "datas": [
+        [
+            "assets/voces\\emmanuel.npy",
+            "assets\\voces"
+        ],
+        [
+            "assets/voces\\Juanes.npy",
+            "assets\\voces"
+        ],
+        [
+            "assets/voces\\Sebas.npy",
+            "assets\\voces"
+        ],
+        [
+            "assets/rostros\\emmanuel.jpg",
+            "assets\\rostros"
+        ],
+        [
+            "assets/rostros\\Juanes.jpg",
+            "assets\\rostros"
+        ],
+        [
+            "assets/rostros\\Sebas.jpg",
+            "assets\\rostros"
+        ],
+        [
+            "data/usuarios.txt",
+            "data"
+        ],
+        [
+            "utils\\face_utils.py",
+            "utils"
+        ],
+        [
+            "utils\\mail_utils.py",
+            "utils"
+        ],
+        [
+            "utils\\speech_utils.py",
+            "utils"
+        ],
+        [
+            "utils\\user_utils.py",
+            "utils"
+        ],
+        [
+            "utils\\__init__.py",
+            "utils"
+        ]
+    ],
+    "hiddenimports": [
+        "utils.face_utils",
+        "utils.mail_utils",
+        "utils.speech_utils",
+        "utils.user_utils",
+        "utils.__init__",
+        "cv2",
+        "pyaudio",
+        "dlib",
+        "numpy.core._methods",
+        "numpy.lib.format",
+        "tkinter",
+        "PIL"
+    ],
+    "binaries": [],
+    "runtime_tmpdir": "."
+}

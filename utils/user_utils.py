@@ -33,30 +33,44 @@ def obtener_contrasena(nombre_usuario):
     return None
 
 def registrar_usuario(root):
-    nombre_usuario = simpledialog.askstring("Registrar usuario", "Ingresa el nombre del nuevo usuario:")
+    # Usar 'parent=root' para que los diálogos estén al frente
+    nombre_usuario = simpledialog.askstring(
+        "Registrar usuario",
+        "Ingresa el nombre del nuevo usuario:",
+        parent=root
+    )
     if not nombre_usuario:
-        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un usuario válido.")
+        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un usuario válido.", parent=root)
         return
 
     if usuario_existe(nombre_usuario):
-        messagebox.showerror("Registro fallido", "❌ El usuario ya existe.")
+        messagebox.showerror("Registro fallido", "❌ El usuario ya existe.", parent=root)
         return
- 
-    contrasena = simpledialog.askstring("Contraseña", f"Ingrese una contraseña para {nombre_usuario}:", show="*")
+
+    contrasena = simpledialog.askstring(
+        "Contraseña",
+        f"Ingrese una contraseña para {nombre_usuario}:",
+        show="*",
+        parent=root
+    )
     if not contrasena:
-        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar una contraseña.")
+        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar una contraseña.", parent=root)
         return
-    
-    correo = simpledialog.askstring("Correo", f"Ingrese el correo electrónico para {nombre_usuario}:")
-    if not correo:  
-        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un correo electrónico.")
+
+    correo = simpledialog.askstring(
+        "Correo",
+        f"Ingrese el correo electrónico para {nombre_usuario}:",
+        parent=root
+    )
+    if not correo:
+        messagebox.showwarning("Registro cancelado", "⚠️ Debes ingresar un correo electrónico.", parent=root)
         return
-    
+
     registrar_foto(nombre_usuario)
     registrar_voz(nombre_usuario, root=root)
     guardar_usuario(nombre_usuario, contrasena, correo)
     print("🎉 Registro completo.")
-    messagebox.showinfo("Registro", f"🎉 Usuario {nombre_usuario} registrado con éxito.")
+    messagebox.showinfo("Registro", f"🎉 Usuario {nombre_usuario} registrado con éxito.", parent=root)
 
 def iniciar_sesion(nombre_usuario, contrasena):
     if not nombre_usuario or not contrasena:
